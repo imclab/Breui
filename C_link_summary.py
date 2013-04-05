@@ -26,6 +26,7 @@ ss = riass.SimpleSummarizer()
 # filtra solo i link nel dominio
 lista = [x for x in lista if u'www.repubblica.it'  in x]
 
+
 for html_link in lista:
     file = urllib2.urlopen(html_link)
     news_page = file.read()
