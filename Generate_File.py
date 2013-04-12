@@ -36,7 +36,6 @@ for html_link in lista:
         title = "C://Documents and Settings//37509200//Desktop//NLTK-Python//Breui//DataFile/"+"news" + str(counter) + ".txt"
         counter = counter +1
 
-
 #        news_soup = BeautifulSoup(html)
 #        news_text = news_soup.get_text()
 #        #readability call
