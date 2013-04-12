@@ -12,12 +12,13 @@ class MyCorpus(object):
     def __init__(self, top_dir):
         self.top_dir = top_dir
         self.dictionary = gensim.corpora.Dictionary(iter_documents(top_dir))
-        self.dictionary.filter_extremes(no_below=1, keep_n=30000) # check API docs for pruning params
+        self.dictionary.filter_extremes(no_below=1, no_above=0.5, keep_n=30000) # check API docs for pruning params
 
     def __iter__(self):
         for tokens in iter_documents(self.top_dir):
             yield self.dictionary.doc2bow(tokens)
 
-corpus = MyCorpus('/tmp/test') # create a dictionary
+corpus = MyCorpus('C://Documents and Settings//37509200//Desktop//NLTK-Python//Breui//DataFile') # create a dictionary
 for vector in corpus: # convert each document to a bag-of-word vector
     print vector
+    print corpus.dictionary.token2id

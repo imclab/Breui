@@ -35,6 +35,7 @@ for html_link in lista:
 #    news_text = soup.get_text()
     goodnews = re.findall(u'inizio TESTO.*fine TESTO', news_page)
     if goodnews :
+        #Call readability function Document
         output = Document(news_page, debug=False).summary().encode('ascii','ignore')
         raw = nltk.clean_html(output)
         #soupg = BeautifulSoup(output).get_text()
