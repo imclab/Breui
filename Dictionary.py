@@ -1,24 +1,40 @@
-import os
-import gensim
+from gensim import corpora
+from gensim import models
+from gensim import similarities
 
-def iter_documents(top_directory):
-    """Iterate over all documents, yielding a document (=list of utf8 tokens) at a time."""
-    for root, dirs, files in os.walk(top_directory):
-        for file in filter(lambda file: file.endswith('.txt'), files):
-            document = open(os.path.join(root, file)).read() # read the entire document, as one big string
-            yield gensim.utils.tokenize(document, lower=True) # or whatever tokenization suits you
 
-class MyCorpus(object):
-    def __init__(self, top_dir):
-        self.top_dir = top_dir
-        self.dictionary = gensim.corpora.Dictionary(iter_documents(top_dir))
-        self.dictionary.filter_extremes(no_below=1, no_above=0.5, keep_n=30000) # check API docs for pruning params
 
-    def __iter__(self):
-        for tokens in iter_documents(self.top_dir):
-            yield self.dictionary.doc2bow(tokens)
+corpus = corpora.MmCorpus('corpus.mm')
+print corpus
 
-corpus = MyCorpus('C://Documents and Settings//37509200//Desktop//NLTK-Python//Breui//DataFile') # create a dictionary
-for vector in corpus: # convert each document to a bag-of-word vector
-    print vector
-    print corpus.dictionary.token2id
+dictionary = corpora.Dictionary.load('corpus.dict')
+print dictionary
+
+tfidf = models.TfidfModel(corpus)
+corpus_tfidf = tfidf[corpus]
+
+index = similarities.SparseMatrixSimilarity(tfidf[corpus],num_features=5)
+print index
+
+#lsi = models.LsiModel(corpus, id2word=dictionary.id2token, num_topics = 2)
+#index = similarities.MatrixSimilarity(lsi[corpus])
+
+doc = "Sport"
+vec_bow = dictionary.doc2bow(doc.lower().split())
+print vec_bow
+
+vec_tfidf =tfidf[vec_bow]
+print vec_tfidf
+
+sims = index[vec_tfidf]
+
+print list(enumerate(sims))
+
+
+#print corpus.dictionary.token2id
+#tfidf_trans = models.tfidfmodel.TfidfModel(corpus, id2word=corpora.dictionary)
+#tfidf_corpus = corpora.Mncorpus(corpus=tfidf_trans[corpus], id2word=corpora.dictionary)
+#lsi_trans = models.LsiModel(corpus=tfidf_corpus, id2word=corpora.dictionary, num_features=400)
+
+#from gensim.similarities import Similarity
+#index = Similarity(corpus=lsi_transformation[logent_transformation[corpus]], num_features=400, output_prefix="shard")
