@@ -17,6 +17,9 @@ from readability.readability import *
 import re
 import string
 
+from time import gmtime, strftime
+
+
 def strbee(s, leader, trailer):
     end_of_leader = s.index(leader) + len(leader)
     start_of_trailer = s.index(trailer, end_of_leader)
@@ -42,7 +45,8 @@ for html_link in lista:
     if notizia :
         notiziastr= re.sub(u'inizio TESTO', '', notizia[0])
         notiziastr= re.sub(u'fine TESTO', '', notiziastr)
-        title = "C://Documents and Settings//37509200//Desktop//NLTK-Python//Breui//DataFile/"+"news" + str(counter) + ".txt"
+        now = strftime("%Y-%m-%d %H%M%S", gmtime())
+        title = ".//DataFile/"+now+"news" + str(counter) + ".txt"
         counter = counter +1    
         file = open(title, "w")
         try:

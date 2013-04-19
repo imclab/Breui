@@ -12,7 +12,7 @@ print dictionary
 
 
 
-lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=2)
+lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=3)
 doc ="Fumata nera nella prima votazione presidente del Senato si ferma a 521 voti"
 vec_bow = dictionary.doc2bow(doc.lower().split())
 vec_lsi = lsi[vec_bow] # convert the query to LSI space
