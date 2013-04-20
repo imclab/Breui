@@ -1,3 +1,15 @@
+'''
+Created on 16/apr/2013
+(Big luck!!)
+Crea i dizionari a partire da un insiame di TXT
+
+@author: Francesco Collova
+'''
+
+
+
+
+
 import os
 from gensim import *
 
@@ -12,18 +24,19 @@ class MyCorpus(object):
     def __init__(self, top_dir):
         self.top_dir = top_dir
         self.dictionary = corpora.Dictionary(iter_documents(top_dir))
-        self.dictionary.filter_extremes(no_below=1, no_above=0.5, keep_n=30000) # check API docs for pruning params
+        self.dictionary.filter_extremes(no_below=1, no_above=0.5, keep_n=3000) # check API docs for pruning params
 
     def __iter__(self):
         for tokens in iter_documents(self.top_dir):
             yield self.dictionary.doc2bow(tokens)
 
-corpus = MyCorpus('C://Documents and Settings//37509200//Desktop//NLTK-Python//Breui//DataFile') # create a dictionary
+# create a corpus dictionary
+corpus = MyCorpus('.//DataFile') 
+
 for vector in corpus: # convert each document to a bag-of-word vector
     print vector
-
 print list(corpus)
 
 # Save Corpus
-corpora.MmCorpus.serialize('corpus.mm', corpus)
-corpus.dictionary.save('corpus.dict')
+corpora.MmCorpus.serialize('.//Corpus//corpus.mm', corpus)
+corpus.dictionary.save('.//Corpus/corpus.dict')

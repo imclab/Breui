@@ -25,15 +25,18 @@ def strbee(s, leader, trailer):
     start_of_trailer = s.index(trailer, end_of_leader)
     return s[end_of_leader:start_of_trailer]
 
-pagelist=['http://www.repubblica.it/sport/']
-#pagelist=['http://www.repubblica.it/sport/calcio/serie-a/roma/2013/04/16/news/roma_andreazzoli_lancia_destro_sar_la_sua_partita-56778823/']
+
+start_http = u'http://www.repubblica.it/sport/calcio/'
+pagelist=[start_http]
+
+
 crawler = crawler_link.crawler('')
 crawler.crawl(pagelist)
 lista = crawler.link_list
 
 
 # filtra solo i link nel dominio
-lista = [x for x in lista if u'www.repubblica.it/sport'  in x]
+lista = [x for x in lista if start_http in x]
 counter=0
 
 for html_link in lista:
