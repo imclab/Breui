@@ -34,16 +34,18 @@ vec_bow = dictionary.doc2bow(doc.lower().split())
 # convert the query to LSI space
 vec_lsi = lsi[vec_bow]
 
-index = similarities.docsim.MatrixSimilarity(lsi[corpus], num_best = 10)
+index = similarities.docsim.MatrixSimilarity(lsi[corpus])
 #index = similarities.docsim.MatrixSimilarity(lsi[corpus])
 
 # perform a similarity query against the corpus
 sims = index[vec_lsi]
 
 #print (document_number, document_similarity) 2-tuples
-print list(sims)
-print numpy.mean([A[1] for A in sims])
-#print numpy.mean(sims)
+lista = list(sims)
+print sorted(lista)
+
+#print numpy.mean([A[1] for A in sims])
+print numpy.mean(sims)
 
 
 

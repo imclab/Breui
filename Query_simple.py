@@ -24,7 +24,7 @@ print dictionary
 index = similarities.Similarity('.//Corpus/', corpus, num_features=corpus.num_terms ) 
 
 # get similarities between the query and all index documents
-query = "partita calcio La Juventus vince con il Napoli"
+query = "pippo pluto e paperino giocano a casa"
 
 
 vec_bow = dictionary.doc2bow(query.lower().split())
