@@ -9,6 +9,9 @@ Esegue query di somiglianza con un dizionario
 from gensim import corpora
 from gensim import models
 from gensim import similarities
+import codecs
+import numpy
+
 
 
 corpus = corpora.MmCorpus('.//Corpus/corpus.mm')
@@ -17,19 +20,32 @@ print corpus
 dictionary = corpora.Dictionary.load('.//Corpus//corpus.dict')
 print dictionary
 
-
-
-#lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=3)
+#Carica il modello LSI
 lsi = models.LsiModel.load('.//Corpus//corpus_lsi.lsi')
 
-doc ="Juventus"
-vec_bow = dictionary.doc2bow(doc.lower().split())
-vec_lsi = lsi[vec_bow] # convert the query to LSI space
-print vec_lsi
-index = similarities.MatrixSimilarity(lsi[corpus])
 
-sims = index[vec_lsi] # perform a similarity query against the corpus
-print list(enumerate(sims)) # print (document_number, document_similarity) 2-tuples
+f = codecs.open(".//DataFile//prova.txt", encoding='utf-8')
+doc = f.read()
+f.close()
+#doc = "pippo pluto e paperino vanno a scuola"
+
+vec_bow = dictionary.doc2bow(doc.lower().split())
+
+# convert the query to LSI space
+vec_lsi = lsi[vec_bow]
+
+index = similarities.docsim.MatrixSimilarity(lsi[corpus], num_best = 10)
+#index = similarities.docsim.MatrixSimilarity(lsi[corpus])
+
+# perform a similarity query against the corpus
+sims = index[vec_lsi]
+
+#print (document_number, document_similarity) 2-tuples
+print list(sims)
+print numpy.mean([A[1] for A in sims])
+#print numpy.mean(sims)
+
+
 
 #tfidf = models.TfidfModel(corpus)
 #corpus_tfidf = tfidf[corpus]

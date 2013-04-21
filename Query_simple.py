@@ -21,14 +21,15 @@ dictionary = corpora.Dictionary.load('.//Corpus/corpus.dict')
 print dictionary
 
 # build the index
-A_index = similarities.Similarity('.//Corpus/', corpus, num_features=corpus.num_terms ) 
+index = similarities.Similarity('.//Corpus/', corpus, num_features=corpus.num_terms ) 
 
 # get similarities between the query and all index documents
-query = "NAPOLI - La Juventus "
+query = "partita calcio La Juventus vince con il Napoli"
 
 
 vec_bow = dictionary.doc2bow(query.lower().split())
-similarities = A_index[vec_bow] 
+print vec_bow
+similarities = index[vec_bow] 
 print similarities
 
 

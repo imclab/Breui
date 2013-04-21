@@ -26,7 +26,7 @@ def strbee(s, leader, trailer):
     return s[end_of_leader:start_of_trailer]
 
 
-start_http = u'http://www.repubblica.it/sport/calcio/'
+start_http = u'http://www.repubblica.it/sport/'
 pagelist=[start_http]
 
 

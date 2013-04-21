@@ -5,20 +5,52 @@ Crea i dizionari a partire da un insiame di TXT
 
 @author: Francesco Collova
 '''
-
+# -*- coding: utf-8 -*-
 
 
 
 
 import os
 from gensim import *
+import codecs
+import re
+import string
+
+#Carica le StopWord per l'italiano
+f = codecs.open(".\\stopword.txt", encoding='utf-8')
+stopword = f.read().split()
+f.close()
+#print stopword
+
+def rm_apostrofi(s):
+    #Le assegnazioni fuori dalla funzione per velocizzare
+    apostrofi = "l' un' all' dall' dell' d' sull' nell' quell' c' v'".split()
+    pattern = '|'.join(map(re.escape, apostrofi))
+    regstop = re.compile(pattern, re.UNICODE )
+    return regstop.sub('', s)
+
+#Rimuove la punteggiatura da un testo
+regex = re.compile('[%s]' % re.escape(string.punctuation))
+def remove_punct(s):
+    return regex.sub('', s)
 
 def iter_documents(top_directory):
     """Iterate over all documents, yielding a document (=list of utf8 tokens) at a time."""
     for root, dirs, files in os.walk(top_directory):
         for file in filter(lambda file: file.endswith('.txt'), files):
-            document = open(os.path.join(root, file)).read() # read the entire document, as one big string
-            yield utils.tokenize(document, lower=True) # or whatever tokenization suits you
+            document = codecs.open(os.path.join(root, file), encoding='utf-8').read() # read the entire document, as one big string
+#            print document
+
+            document = [word for word in document.lower().split() if word not in stopword]
+            document = [rm_apostrofi(word) for word in document]
+
+#            Non funziona ad esempio con l'aereo si ha laereo
+#            document = [remove_punct(word) for word in document]
+            
+
+#            print document
+#            yield utils.tokenize(document, lower=True) # or whatever tokenization suits you
+            yield document
 
 class MyCorpus(object):
     def __init__(self, top_dir):
@@ -35,7 +67,9 @@ corpus = MyCorpus('.//DataFile')
 
 for vector in corpus: # convert each document to a bag-of-word vector
     print vector
+
 print list(corpus)
+print corpus.dictionary.id2token
 
 # Save Corpus
 corpora.MmCorpus.serialize('.//Corpus//corpus.mm', corpus)
