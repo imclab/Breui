@@ -43,6 +43,7 @@ def iter_documents(top_directory):
 
             document = [word for word in document.lower().split() if word not in stopword]
             document = [rm_apostrofi(word) for word in document]
+            document = [word for word in document if len(word) > 3 ]
 
 #            Non funziona ad esempio con l'aereo si ha laereo
 #            document = [remove_punct(word) for word in document]
@@ -56,7 +57,9 @@ class MyCorpus(object):
     def __init__(self, top_dir):
         self.top_dir = top_dir
         self.dictionary = corpora.Dictionary(iter_documents(top_dir))
-        self.dictionary.filter_extremes(no_below=1, no_above=0.5, keep_n=3000) # check API docs for pruning params
+        # check API docs for pruning params
+        self.dictionary.filter_extremes(no_below=1, no_above=1, keep_n=100)
+
 
     def __iter__(self):
         for tokens in iter_documents(self.top_dir):
@@ -74,3 +77,8 @@ print corpus.dictionary.id2token
 # Save Corpus
 corpora.MmCorpus.serialize('.//Corpus//corpus.mm', corpus)
 corpus.dictionary.save('.//Corpus/corpus.dict')
+
+corpus = corpora.MmCorpus('.//Corpus/corpus.mm')
+print corpus
+dictionary = corpora.Dictionary.load('.//Corpus//corpus.dict')
+print dictionary

@@ -15,7 +15,7 @@ print dictionary.token2id
 # tfidf = models.TfidfModel(corpus)
 # corpus_tfidf = tfidf[corpus]
 
-lsi = models.LsiModel(corpus, num_topics=5, id2word = dictionary)
+lsi = models.LsiModel(corpus, num_topics=10, id2word = dictionary)
 lsi.save('.//Corpus/corpus_lsi.lsi')
 
 #Stampa i cluster dell'LSI

@@ -24,10 +24,10 @@ print dictionary
 lsi = models.LsiModel.load('.//Corpus//corpus_lsi.lsi')
 
 
-f = codecs.open(".//DataFile//prova.txt", encoding='utf-8')
+f = codecs.open(".//Corpus//prova.txt", encoding='utf-8')
 doc = f.read()
 f.close()
-#doc = "pippo pluto e paperino vanno a scuola"
+doc = "cavani pippo pluto e paperino giocano a palla"
 
 vec_bow = dictionary.doc2bow(doc.lower().split())
 
