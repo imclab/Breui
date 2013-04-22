@@ -17,7 +17,7 @@ import re
 import string
 
 #Carica le StopWord per l'italiano
-f = codecs.open(".\\stopword.txt", encoding='utf-8')
+f = codecs.open(".//stopword.txt", encoding='utf-8')
 stopword = f.read().split()
 f.close()
 #print stopword
