@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 16/apr/2013
 (Big luck!!)
@@ -17,24 +18,33 @@ import numpy
 corpus = corpora.MmCorpus('.//Corpus/corpus.mm')
 print corpus
 
-dictionary = corpora.Dictionary.load('.//Corpus//corpus.dict')
-print dictionary
+dict = corpora.Dictionary.load('.//Corpus//corpus.dict')
+print dict
+
+#carica il modell TFIDF
+tfidfmodel = models.TfidfModel.load('.//Corpus//corpus_tfidf.tfidf')
 
 #Carica il modello LSI
-lsi = models.LsiModel.load('.//Corpus//corpus_lsi.lsi')
+lsimodel = models.LsiModel.load('.//Corpus//corpus_lsi.lsi')
 
 
 f = codecs.open(".//Corpus//prova.txt", encoding='utf-8')
 doc = f.read()
 f.close()
-doc = "cavani pippo pluto e paperino giocano a palla"
+doc = u"pippo pluto e paperino giocano a palla partita"
 
-vec_bow = dictionary.doc2bow(doc.lower().split())
+#attenzione il DOC a doc2bow deve essere una lista di word
+vec_bow = dict.doc2bow(doc.lower().split())
+
+#convert query to tfidf model
+vec_tfidf = tfidfmodel[vec_bow]
+print vec_tfidf
 
 # convert the query to LSI space
-vec_lsi = lsi[vec_bow]
+vec_lsi = lsimodel[vec_tfidf]
+print vec_lsi
 
-index = similarities.docsim.MatrixSimilarity(lsi[corpus])
+index = similarities.docsim.MatrixSimilarity(lsimodel[tfidfmodel[corpus]])
 #index = similarities.docsim.MatrixSimilarity(lsi[corpus])
 
 # perform a similarity query against the corpus
@@ -46,6 +56,7 @@ print sorted(lista)
 
 #print numpy.mean([A[1] for A in sims])
 print numpy.mean(sims)
+print float(len([x for x in sims if x > 0.5]))/len(sims)
 
 
 

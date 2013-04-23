@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 28/mar/2013
 @author: F. Collova
@@ -6,15 +7,28 @@ Created on 28/mar/2013
 import urllib2
 from bs4 import *
 from urlparse import urljoin
+import pymongo
 
 class crawler:
 # Initialize the crawler with the name of database
-    def __init__(self,dbname):
+    def __init__(self,db_name):
+
         self.link_list = []
+        try:
+            from pymongo import Connection
+            self.connection = pymongo.Connection('mongodb://localhost:27017')
+            self.database = self.connection[db_name]
+        except:
+            print('Error: Unable to connect to database.')
+            self.connection = None
+
     def __del__(self):
         pass
+
     def dbcommit(self):
-        pass
+        self.connection.disconnect()
+        
+
 # Crawl in breadth first manner F.C.
 
     def crawl(self,pages,depth=1):
@@ -56,12 +70,24 @@ class crawler:
         return None
 # Return true if this url is already indexed
     def isindexed(self,url):
-        if url in self.link_list : return True
+        ifurl = self.database.crawled.find({'linkTo': url})
+        if ifurl.count()>0 : return True
         return False
+
+#        if url in self.link_list : return True
+#        return False
+
+
 # Add a link between two pages
     def addlinkref(self,urlFrom,urlTo,linkText):
         print 'Link %s'  % urlTo
+        if self.connection is not None:
+            self.database.crawled.insert({'urlFrom': urlFrom,
+                                     'urlTo': urlTo,
+                                     'linkText': linkText})
         self.link_list.append(urlTo)
+
+
 # Starting with a list of pages, do a breadth
 # first search to the given depth, indexing pages
 # Create the database tables
@@ -70,7 +96,7 @@ def createindextables(self):
 
 
 
-#pagelist=['http://www.repubblica.it']
-#crawler = crawler('')
-#crawler.crawl(pagelist)
-#print crawler.link_list
+pagelist=['http://www.repubblica.it']
+crawler = crawler('dblink')
+crawler.crawl(pagelist)
+print crawler.link_list

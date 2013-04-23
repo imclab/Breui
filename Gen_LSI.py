@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from gensim import corpora
 from gensim import models
 from gensim import similarities
@@ -12,11 +14,13 @@ dictionary = corpora.Dictionary.load('.//Corpus/corpus.dict')
 print dictionary
 print dictionary.token2id
 
-# tfidf = models.TfidfModel(corpus)
-# corpus_tfidf = tfidf[corpus]
+tfidf = models.TfidfModel(corpus)
+corpus_tfidf = tfidf[corpus]
+tfidf.save('.//Corpus/corpus_tfidf.tfidf')
 
-lsi = models.LsiModel(corpus, num_topics=10, id2word = dictionary)
+lsi = models.LsiModel(corpus_tfidf, num_topics=25)
 lsi.save('.//Corpus/corpus_lsi.lsi')
+
 
 #Stampa i cluster dell'LSI
 for topicN in range(lsi.num_topics):

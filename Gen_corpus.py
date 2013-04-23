@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on 16/apr/2013
 (Big luck!!)
@@ -5,7 +7,6 @@ Crea i dizionari a partire da un insiame di TXT
 
 @author: Francesco Collova
 '''
-# -*- coding: utf-8 -*-
 
 
 
