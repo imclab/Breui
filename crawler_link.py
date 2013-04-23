@@ -70,7 +70,7 @@ class crawler:
         return None
 # Return true if this url is already indexed
     def isindexed(self,url):
-        ifurl = self.database.crawled.find({'linkTo': url})
+        ifurl = self.database.crawled.find({'urlTo': url})
         if ifurl.count()>0 : return True
         return False
 
@@ -82,9 +82,7 @@ class crawler:
     def addlinkref(self,urlFrom,urlTo,linkText):
         print 'Link %s'  % urlTo
         if self.connection is not None:
-            self.database.crawled.insert({'urlFrom': urlFrom,
-                                     'urlTo': urlTo,
-                                     'linkText': linkText})
+            self.database.crawled.insert({'urlFrom': urlFrom,'urlTo': urlTo,'linkText': linkText})
         self.link_list.append(urlTo)
 
 

@@ -1,3 +1,5 @@
+#http://www.scurtu.it/documentSimilarity.html
+
 import urllib,urllib2
 import json
 API_URL="http://www.scurtu.it/apis/documentSimilarity"
