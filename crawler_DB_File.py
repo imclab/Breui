@@ -3,10 +3,11 @@
 Created on 28/mar/2013
 @author: F. Collova
 '''
-
+import re
 import urllib2
 from bs4 import *
 from urlparse import urljoin
+from time import gmtime, strftime
 import pymongo
 
 class crawler:
@@ -14,6 +15,7 @@ class crawler:
     def __init__(self,db_name):
 
         self.link_list = []
+        self.counter=0
         try:
             from pymongo import Connection
             self.connection = pymongo.Connection('mongodb://localhost:27017')
@@ -51,8 +53,9 @@ class crawler:
                         if (url[0:5]=='http:' and not self.isindexed(url)
                             and page in url):
                             newpages.add(url)
-                            linkText=self.gettextonly(url)
-                            self.addlinkref(page,url,linkText)
+                            httpSoup, httpText = self.gettextonly(url)
+                            if httpSoup : self.createFile(httpSoup)
+                            self.addlinkref(page,url,httpText)
             self.dbcommit( )
         pages=newpages
 
@@ -66,11 +69,17 @@ class crawler:
 
 # Extract the text from an HTML page (no tags)
     def gettextonly(self,url):
-        news_page = urllib2.urlopen(url).read()
-        soup = BeautifulSoup(news_page)
-        page_title=soup.title.string
-        soup_text = soup.get_text()
-        return soup_text
+        print "Reading... %s" % url
+        try:
+            http_page = urllib2.urlopen(url).read()
+            http_soup = BeautifulSoup(http_page)
+            # Lo rende Unicode
+            http_txt = http_soup.prettify()
+            return http_soup, http_txt   
+        except:
+            print "Could not read %s" % url
+            return None,None
+
 
 # Separate the words by any non-whitespace character
     def separatewords(self,text):
@@ -86,13 +95,38 @@ class crawler:
 
 
 # Add a link between two pages
-    def addlinkref(self,urlFrom,urlTo,linkText):
+    def addlinkref(self,urlFrom,urlTo,httpText):
         print 'Link %s'  % urlTo
         if self.connection is not None:
-            self.database.crawled.insert({'urlFrom': urlFrom,'urlTo': urlTo,'linkText': linkText})
-        self.link_list.append(urlTo)
+            GMTtime = gmtime()
+            now = strftime("%Y-%m-%d %H:%M:%S", GMTtime)
+            self.database.crawled.insert({'timestr': now,
+                                          'urlFrom': urlFrom,
+                                          'urlTo': urlTo,
+                                          'httpText': httpText})
+            self.link_list.append(urlTo)
 
+    def createFile(self,httpSoup):
+        try:
+            title = httpSoup.find("title").string
+        except:
+            title = ""
+        soup_text = httpSoup.get_text()
+        notizia = re.findall(u'inizio TESTO.*fine TESTO', soup_text,re.UNICODE|re.DOTALL)
+        if notizia :
+            notiziastr= re.sub(u'inizio TESTO', '', notizia[0])
+            notiziastr= re.sub(u'fine TESTO', '', notiziastr)
+            now = strftime("%Y-%m-%d %H%M%S", gmtime())
+            filename = ".//DataFile/News_" + now + str(self.counter) + ".txt"
+            self.counter = self.counter +1    
+            file = open(filename, "w")
+            try:
+                file.write(title)
+                file.write(notiziastr) # Write a string to a file
+            finally:
+                file.close()
 
+    
 # Starting with a list of pages, do a breadth
 # first search to the given depth, indexing pages
 # Create the database tables
@@ -101,7 +135,7 @@ def createindextables(self):
 
 
 
-pagelist=['http://www.repubblica.it']
+pagelist=['http://www.repubblica.it/sport/calcio']
 crawler = crawler('dblink')
 crawler.crawl(pagelist)
 print crawler.link_list
