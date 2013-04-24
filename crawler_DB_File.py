@@ -134,6 +134,7 @@ def createindextables(self):
     pass
 
 
+# Crawl link Store on DB and Create File
 
 pagelist=['http://www.repubblica.it/sport/calcio']
 crawler = crawler('dblink')
