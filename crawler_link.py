@@ -48,9 +48,10 @@ class crawler:
                         url=urljoin(page,link['href'])
                         if url.find("'")!=-1: continue
                         url=url.split('#')[0] # remove location portion
-                        if url[0:4]=='http' and not self.isindexed(url):
+                        if (url[0:5]=='http:' and not self.isindexed(url)
+                            and page in url):
                             newpages.add(url)
-                            linkText=self.gettextonly(link)
+                            linkText=self.gettextonly(url)
                             self.addlinkref(page,url,linkText)
             self.dbcommit( )
         pages=newpages
@@ -62,9 +63,15 @@ class crawler:
 # Index an individual page
     def addtoindex(self,url,soup):
         print 'Indexing %s' % url
+
 # Extract the text from an HTML page (no tags)
-    def gettextonly(self,soup):
-        return None
+    def gettextonly(self,url):
+        news_page = urllib2.urlopen(url).read()
+        soup = BeautifulSoup(news_page)
+        page_title=soup.title.string
+        soup_text = soup.get_text()
+        return soup_text
+
 # Separate the words by any non-whitespace character
     def separatewords(self,text):
         return None
