@@ -28,10 +28,10 @@ tfidfmodel = models.TfidfModel.load('.//Corpus//corpus_tfidf.tfidf')
 lsimodel = models.LsiModel.load('.//Corpus//corpus_lsi.lsi')
 
 
-f = codecs.open(".//Corpus//prova.txt", encoding='utf-8')
+f = codecs.open(".//Corpus//prova_notizia.txt", encoding='utf-8')
 doc = f.read()
 f.close()
-doc = u"pippo pluto e paperino giocano a palla partita"
+#doc = u"pippo pluto e paperino napoli"
 
 #attenzione il DOC a doc2bow deve essere una lista di word
 vec_bow = dict.doc2bow(doc.lower().split())

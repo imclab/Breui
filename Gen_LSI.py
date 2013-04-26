@@ -18,7 +18,7 @@ tfidf = models.TfidfModel(corpus)
 corpus_tfidf = tfidf[corpus]
 tfidf.save('.//Corpus/corpus_tfidf.tfidf')
 
-lsi = models.LsiModel(corpus_tfidf, num_topics=25)
+lsi = models.LsiModel(corpus_tfidf, num_topics=24)
 lsi.save('.//Corpus/corpus_lsi.lsi')
 
 

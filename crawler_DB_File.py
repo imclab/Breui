@@ -54,8 +54,9 @@ class crawler:
                             and page in url):
                             newpages.add(url)
                             httpSoup, httpText = self.gettextonly(url)
-                            if httpSoup : self.createFile(httpSoup)
-                            self.addlinkref(page,url,httpText)
+                            if httpSoup :
+                                notiziaStr = self.createFile(httpSoup)
+                            self.addlinkref(page,url,httpText,notiziaStr)
             self.dbcommit( )
         pages=newpages
 
@@ -95,37 +96,41 @@ class crawler:
 
 
 # Add a link between two pages
-    def addlinkref(self,urlFrom,urlTo,httpText):
+    def addlinkref(self,urlFrom,urlTo,httpText,notiziaStr):
         print 'Link %s'  % urlTo
         if self.connection is not None:
             GMTtime = gmtime()
             now = strftime("%Y-%m-%d %H:%M:%S", GMTtime)
             self.database.crawled.insert({'timestr': now,
+                                          'counter': self.counter,
                                           'urlFrom': urlFrom,
                                           'urlTo': urlTo,
-                                          'httpText': httpText})
+                                          'httpText': httpText,
+                                          'notiziaStr' : notiziaStr})
             self.link_list.append(urlTo)
 
     def createFile(self,httpSoup):
-        try:
-            title = httpSoup.find("title").string
-        except:
-            title = ""
+        notiziastr = "Nulla"
+        title = ""
         soup_text = httpSoup.get_text()
         notizia = re.findall(u'inizio TESTO.*fine TESTO', soup_text,re.UNICODE|re.DOTALL)
         if notizia :
+            try:
+                title = httpSoup.find("title").string
+            except:
+                title=""
             notiziastr= re.sub(u'inizio TESTO', '', notizia[0])
             notiziastr= re.sub(u'fine TESTO', '', notiziastr)
             now = strftime("%Y-%m-%d %H%M%S", gmtime())
             filename = ".//DataFile/News_" + now + str(self.counter) + ".txt"
             self.counter = self.counter +1    
-            file = open(filename, "w")
+            ff = open(filename, "w")
             try:
-                file.write(title)
-                file.write(notiziastr) # Write a string to a file
+                ff.write(title)
+                ff.write(notiziastr) # Write a string to a file
             finally:
-                file.close()
-
+                ff.close()
+        return title + notiziastr
     
 # Starting with a list of pages, do a breadth
 # first search to the given depth, indexing pages
@@ -134,9 +139,3 @@ def createindextables(self):
     pass
 
 
-# Crawl link Store on DB and Create File
-
-pagelist=['http://www.repubblica.it/sport/calcio']
-crawler = crawler('dblink')
-crawler.crawl(pagelist)
-print crawler.link_list
