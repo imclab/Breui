@@ -9,8 +9,6 @@ Crea i dizionari a partire da un insiame di TXT
 '''
 
 
-
-
 import os
 from gensim import *
 import codecs
@@ -68,7 +66,7 @@ class MyCorpus(object):
         self.top_dir = top_dir
         self.dictionary = corpora.Dictionary(iter_documents(top_dir))
         # check API docs for pruning params
-        self.dictionary.filter_extremes(no_below=1, no_above=0.5, keep_n=100)
+        self.dictionary.filter_extremes(no_below=5, no_above=0.6, keep_n=30)
 
     def __iter__(self):
         for tokens in iter_documents(self.top_dir):

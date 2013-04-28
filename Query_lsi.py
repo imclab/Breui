@@ -14,21 +14,22 @@ import codecs
 import numpy
 
 
+RootDir = ".//DataFile"
 
-corpus = corpora.MmCorpus('.//Corpus/corpus.mm')
+corpus = corpora.MmCorpus(RootDir + '//Corpus/corpus.mm')
 print corpus
 
-dict = corpora.Dictionary.load('.//Corpus//corpus.dict')
+dict = corpora.Dictionary.load(RootDir + '//Corpus//corpus.dict')
 print dict
 
 #carica il modell TFIDF
-tfidfmodel = models.TfidfModel.load('.//Corpus//corpus_tfidf.tfidf')
+tfidfmodel = models.TfidfModel.load(RootDir + '//Corpus//corpus_tfidf.tfidf')
 
 #Carica il modello LSI
-lsimodel = models.LsiModel.load('.//Corpus//corpus_lsi.lsi')
+lsimodel = models.LsiModel.load(RootDir + '//Corpus//corpus_lsi.lsi')
 
 
-f = codecs.open(".//Corpus//prova_notizia.txt", encoding='utf-8')
+f = codecs.open('.//Corpus//prova_notizia.txt', encoding='utf-8')
 doc = f.read()
 f.close()
 #doc = u"pippo pluto e paperino napoli"

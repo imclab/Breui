@@ -12,10 +12,11 @@ import pymongo
 
 class crawler:
 # Initialize the crawler with the name of database
-    def __init__(self,db_name):
+    def __init__(self,db_name,saveDir):
 
         self.link_list = []
         self.counter=0
+        self.saveDir = saveDir
         try:
             from pymongo import Connection
             self.connection = pymongo.Connection('mongodb://localhost:27017')
@@ -31,7 +32,7 @@ class crawler:
         self.connection.disconnect()
         
 
-# Crawl in breadth first manner F.C.
+# Crawl in breadth first manner F.C. solo dei link nel dominio di Pages!!!
 
     def crawl(self,pages,depth=1):
         for i in range(depth):
@@ -50,12 +51,14 @@ class crawler:
                         url=urljoin(page,link['href'])
                         if url.find("'")!=-1: continue
                         url=url.split('#')[0] # remove location portion
+                        
+                        #Attenzione fa il crawl solo dei link nel dominio
                         if (url[0:5]=='http:' and not self.isindexed(url)
                             and page in url):
                             newpages.add(url)
                             httpSoup, httpText = self.gettextonly(url)
                             if httpSoup :
-                                notiziaStr = self.createFile(httpSoup)
+                                notiziaStr = self.createFile(httpSoup,self.saveDir)
                             self.addlinkref(page,url,httpText,notiziaStr)
             self.dbcommit( )
         pages=newpages
@@ -109,7 +112,7 @@ class crawler:
                                           'notiziaStr' : notiziaStr})
             self.link_list.append(urlTo)
 
-    def createFile(self,httpSoup):
+    def createFile(self,httpSoup,saveDir):
         notiziastr = "Nulla"
         title = ""
         soup_text = httpSoup.get_text()
@@ -122,7 +125,7 @@ class crawler:
             notiziastr= re.sub(u'inizio TESTO', '', notizia[0])
             notiziastr= re.sub(u'fine TESTO', '', notiziastr)
             now = strftime("%Y-%m-%d %H%M%S", gmtime())
-            filename = ".//DataFile/News_" + now + str(self.counter) + ".txt"
+            filename = saveDir + "//News_" + now + str(self.counter) + ".txt"
             self.counter = self.counter +1    
             ff = open(filename, "w")
             try:

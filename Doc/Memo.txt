@@ -1,0 +1,3 @@
+E' più facile partire con Twitter
+In automatico si prelevano i twit di un utente si fa LSI e si propongono i topic
+Si presentano le parole chiave e lui sceglie cosa rappresentano

@@ -25,3 +25,22 @@ def remove_stopword(s):
 stringa = "cinque case"
 ss=remove_stopword(stringa)
 print ss
+
+
+def vec_tuple2feature(tupleVect):
+    featureVect = []
+    for i in range(len(tupleVect)):
+        Atuple = tupleVect[i]
+        featureVect.append(Atuple[1])
+    return(featureVect)
+
+def doc_tuple2feature(tupleCorpus):
+    featureDoc = []
+    for x in tupleCorpus:
+        tmp = []
+        for i in range(len(x)):
+            y = x[i]
+            tmp.append(y[1])
+        featureDoc.append(tmp)
+    return featureDoc
+    
