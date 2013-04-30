@@ -1,5 +1,10 @@
 import GoogleScraper
-from urllib.parse import urlparse 
+from urllib.parse import urlparse
+import urllib2.parse_http_list
+
+
+
+
 if __name__ == '__main__':
     
     urls = GoogleScraper.scrape('hochwasserhose', number_pages=2)
