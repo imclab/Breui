@@ -22,8 +22,8 @@ corpus = MyCorpus(RootDir)
 for vector in corpus: # convert each document to a bag-of-word vector
     print vector
 
-print list(corpus)
-print corpus.dictionary.id2token
+# print list(corpus)
+# print corpus.dictionary.id2token
 
 # Save Corpus
 corpora.MmCorpus.serialize(RootDir + '//Corpus//corpus.mm', corpus)

@@ -15,22 +15,10 @@ dictionary = corpora.Dictionary.load(RootDir + '//Corpus/corpus.dict')
 print dictionary
 print dictionary.token2id
 
-tfidf = models.TfidfModel(corpus)
 
 
-corpus_tfidf = tfidf[corpus]
-for vector in corpus_tfidf:
-    print vector
-    
-#Stampa i topic del TFIDF
-print tfidf.dfs
-print tfidf.idfs
-
-
-tfidf.save(RootDir + '//Corpus/corpus_tfidf.tfidf')
-
-lsi = models.LsiModel(corpus_tfidf, num_topics=15)
-lsi.save(RootDir + '//Corpus/corpus_lsi.lsi')
+lsi = models.LsiModel(corpus, num_topics=2)
+lsi.save(RootDir + '//Corpus/corpus_lsi_no_tfidf.lsi')
 
 
 #Stampa i cluster dell'LSI
