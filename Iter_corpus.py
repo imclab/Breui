@@ -23,11 +23,6 @@ def iter_documents(top_directory):
             document = codecs.open(os.path.join(root, file), encoding='utf-8').read() # read the entire document, as one big string
 #            print document
             document = List_of_Word(document)
-#             document = rm_apostrofi(document)
-#             document = remove_punct(document)
-#             document = [word for word in document.lower().split() if word not in stopword]
-# #           document = [rm_apostrofi(word) for word in document]
-#             document = [word for word in document if len(word) > 4 ]
 
 #            Non funziona ad esempio con l'aereo si ha laereo
 #            document = [remove_punct(word) for word in document]
