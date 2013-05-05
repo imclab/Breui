@@ -11,6 +11,10 @@ from bottle import route, run, request, abort
 import urllib2
 from bs4 import *
 import nltk
+from  Rest_Query_Gaussian_no_TFIDF import *
+
+from readability.readability import Document
+
 
 # from pymongo import Connection
 
@@ -67,10 +71,9 @@ def Http2Text(self,httpSoup):
 1 
 @route('/link/', method='GET')
 def get_link():
-
 #     entity = db['documents'].find_one({'_id':id})
 #     if is_valid_url(vlink)
-
+#Recupera il parametro di url=
     url = request.GET.get("url")
 #    test = parse(url, rule='IRI') non funziona ????????
     test = is_valid_url(url)
@@ -78,14 +81,23 @@ def get_link():
         abort(404, 'Invalid url parameter')
     try:
         http_page = urllib2.urlopen(url).read()
-        http_soup = BeautifulSoup(http_page)
+        html_soup = BeautifulSoup(http_page)
         # Lo rende Unicode
-        http_txt = http_soup.prettify()
-        raw = nltk.clean_html(http_txt)
-        soup_txt = http_soup.get_text()
-        return '<<<------------------------ WELCOME to Breui Restful Api ---------------------->>>' + raw   
+        html_txt = html_soup.prettify()
+        #Call readability function Document
+        readable_article = Document(html_txt).summary()
+        soup_readable = BeautifulSoup(readable_article)
+        soup_txt = soup_readable.get_text()
+        
+        #read_http_txt = Document(http_txt, debug=False).summary().encode('ascii','ignore')
+        #raw = nltk.clean_html(read_http_txt)
+        # verifica la tipologia
+
+        pred, test = Test_SVN(soup_txt)
+        #return '<<<------------------------ WELCOME to Breui Restful Api ---------------------->>>' + raw   
+        return '<<<--- WELCOME to Breui Restful Api --->>> ' + str(pred) + ' ' + str(test) + soup_txt
     except:
-        return "Could not read %s" % url
+        return "Could not read ---> %s" % url
 
 
 # = parse('http://fdasdf/fss', rule='IRI')
