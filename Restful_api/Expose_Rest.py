@@ -17,8 +17,7 @@ from readability.readability import Document
 
 
 # from pymongo import Connection
-
-from urlparse import urlparse
+# from urlparse import urlparse
 # urlparse('http://----')
 # # returns: ParseResult(scheme='http', netloc='----', path='', params='', query='', fragment='')
 
@@ -95,7 +94,10 @@ def get_link():
 
         pred, test = Test_SVN(soup_txt)
         #return '<<<------------------------ WELCOME to Breui Restful Api ---------------------->>>' + raw   
-        return '<<<--- WELCOME to Breui Restful Api --->>> ' + str(pred) + ' ' + str(test) + soup_txt
+        return {'msg' : '<<<--- WELCOME to Breui Restful Api --->>>',
+                'prediction': str(pred),
+                'confidence': str(test),
+                'text' : soup_txt}
     except:
         return "Could not read ---> %s" % url
 
