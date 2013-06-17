@@ -15,7 +15,9 @@ import codecs
 import pickle
 from util import *
 
-import pylab as pl
+# Solo per il plotting
+
+# import pylab as pl
 
 
 RootDir = "..//DataFile"
